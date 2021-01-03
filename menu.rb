@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require './pot_manager'
 
 class Blumentopf
   class Menu
     attr_accessor :active_item
-    attr_reader :oled, :items, :pot_manager
+    attr_reader :oled, :pot_manager
+
     def initialize(oled, pot_manager)
       @active_item = 0
       @oled = oled
@@ -12,9 +15,9 @@ class Blumentopf
 
     def items
       [
-        {long: 'Overview', short: '#'},
+        { long: 'Overview', short: '#' },
         pots_to_menu,
-        {long: 'Settings', short: '*'},
+        { long: 'Settings', short: '*' }
       ].flatten
     end
 
@@ -22,27 +25,27 @@ class Blumentopf
       draw_order = []
       items.each_with_index do |item, index|
         draw_order << if index == active_item
-          "[#{item[:long]}]"
-        else
-          " #{item[:short]} "
-        end
+                        "[#{item[:long]}]"
+                      else
+                        " #{item[:short]} "
+                      end
       end
 
       draw_order.join(' ')
     end
 
     def next
-      if active_item < (items.size - 1)
-        @active_item += 1
-        draw
-      end
+      return unless active_item < (items.size - 1)
+
+      @active_item += 1
+      draw
     end
-    
+
     def back
-      if active_item > 0
-        @active_item -= 1
-        draw
-      end
+      return unless active_item.positive?
+
+      @active_item -= 1
+      draw
     end
 
     def draw
@@ -53,7 +56,7 @@ class Blumentopf
     private
 
     def pots_to_menu
-      pot_manager.pots.to_enum.with_index.map do |pot, index|
+      pot_manager.pots.to_enum.with_index.map do |_pot, index|
         { long: "Pot #{index}", short: index }
       end
     end

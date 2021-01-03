@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './pot'
+require_relative './pot'
 
 class Blumentopf
   class PotManager
@@ -8,6 +8,11 @@ class Blumentopf
 
     def initialize
       @pots = []
+    end
+
+    def add_pot(pot)
+      pot.index = pots.size
+      pots << pot unless pots.include? pot
     end
   end
 end

@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
-require './pot_manager'
+require_relative './pot_manager'
 
 class Blumentopf
   class Menu
     attr_accessor :active_item
-    attr_reader :oled, :pot_manager
+    attr_reader :display, :pot_manager
 
-    def initialize(oled, pot_manager)
+    def initialize(display, pot_manager)
       @active_item = 0
-      @oled = oled
+      @display = display
       @pot_manager = pot_manager
+
+      draw
     end
 
     def items
@@ -49,8 +51,8 @@ class Blumentopf
     end
 
     def draw
-      oled.write_line 1, 0, ' ' * 22
-      oled.write_line 1, 0, current
+      display.oled.write_line 1, 0, ' ' * 22
+      display.oled.write_line 1, 0, current
     end
 
     private

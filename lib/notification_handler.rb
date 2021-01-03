@@ -5,15 +5,18 @@ require 'yaml'
 
 class Blumentopf
   class NotificationHandler
-    attr_reader :telegram
+    attr_reader :telegram, :ipcon
 
-    def initialize
+    def initialize(ipcon)
+      @ipcon = ipcon
       @config = YAML.load_file 'config.yml'
 
-      @telegram_token = @config['telegram']['token']
-      @telegram_chat_id = @config['telegram']['chat_id']
+      init_telegram
+      init_callbacks
+    end
 
-      @telegram = Telegram::Bot::Api.new(@telegram_token) if @telegram_token && @telegram_chat_id
+    def inspect
+      "#<#{self.class.name}:#{object_id}>"
     end
 
     def notify(text)
@@ -23,8 +26,35 @@ class Blumentopf
                             text: text)
     end
 
-    def inspect
-      "#<#{self.class.name}:#{object_id}>"
+    private
+
+    def init_telegram
+      @telegram_token = @config['telegram']['token']
+      @telegram_chat_id = @config['telegram']['chat_id']
+
+      @telegram = Telegram::Bot::Api.new(@telegram_token) if @telegram_token && @telegram_chat_id
+    end
+
+    def init_callbacks
+      ipcon.register_callback(IPConnection::CALLBACK_CONNECTED) do |reason|
+        case reason
+        when IPConnection::CONNECT_REASON_REQUEST
+          puts 'Connected by request'
+        when IPConnection::CONNECT_REASON_AUTO_RECONNECT
+          puts 'Auto-Reconnect'
+        end
+      end
+
+      ipcon.register_callback(IPConnection::CALLBACK_DISCONNECTED) do |reason|
+        case reason
+        when IPConnection::DISCONNECT_REASON_REQUEST
+          notify('Disconnect requested by user')
+        when IPConnection::DISCONNECT_REASON_ERROR
+          notify('Disconnected by error')
+        when IPConnection::DISCONNECT_REASON_SHUTDOWN
+          notify('Disconnect requested by device')
+        end
+      end
     end
   end
 end

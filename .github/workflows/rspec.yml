@@ -12,19 +12,15 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           ruby-version: 3.0.0
-
-    - name: Build
-      env:
-
-        RAILS_ENV: test
-      run: |
-        gem install bundler
-        bundle config path vendor/bundle
-        bundle install --jobs 4 --retry 3
-
-    - name: Run tests
-      env:
-        RAILS_ENV: test
-
-      run: |
-        bundle exec rspec
+      - name: Build
+        env:
+          RAILS_ENV: test
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Run tests
+        env:
+          RAILS_ENV: test
+        run: |
+          bundle exec rspec

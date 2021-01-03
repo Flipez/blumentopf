@@ -1,0 +1,12 @@
+# Classes
+class Blumentopf
+  class Pot
+    attr_reader uid: untyped
+    attr_reader connected_uid: untyped
+    attr_reader position: nil
+    attr_reader hardware_version: untyped
+    attr_reader firmware_version: untyped
+    attr_reader device_identifier: untyped
+    def initialize: (untyped uid, untyped connected_uid, untyped _position, untyped hardware_version, untyped firmware_version, untyped device_identifier) -> untyped
+  end
+end

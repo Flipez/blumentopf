@@ -40,7 +40,7 @@ class Blumentopf
 
         display.draw_pot(moisture(voltage), index)
       end
-      bricklet.set_voltage_callback_configuration 1000, false, 'x', 0, 0
+      bricklet.set_voltage_callback_configuration 1000, false, BrickletAnalogInV3::THRESHOLD_OPTION_OFF, 0, 0
     end
 
     def init_status_led

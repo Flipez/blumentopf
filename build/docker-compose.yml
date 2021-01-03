@@ -1,0 +1,6 @@
+version: "3.9"
+services:
+  brickd:
+    build: ./brickd
+    ports:
+      - "4223:4223"
